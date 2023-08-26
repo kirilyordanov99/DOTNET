@@ -1,5 +1,11 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+@model Web_Application.Models.UsersViewModel
+
+<h2>User Details</h2>
+
+<div>
+    <h4>Username: @Model.Username</h4>
+    <p>Email: @Model.Email</p>
+    <p>Role: @Model.Role</p>
+</div>
+
+<a asp-controller="UserManagement" asp-action="Index" class="btn btn-secondary">Back to List</a>
