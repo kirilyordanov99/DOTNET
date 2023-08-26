@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@if (User.Identity.IsAuthenticated) // Check if the user is authenticated
+{
+    <div class="container">
+        @if (User.IsInRole("Admin")) // Show CRUD links to users with the "Admin" role
+        {
+            <a asp-page="/Books/Create" class="btn btn-primary">Add New Book</a>
+            <a asp-page="/Books/Index" class="btn btn-secondary">Manage Books</a>
+        }
+    </div>
+}

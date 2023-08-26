@@ -1,0 +1,40 @@
+﻿@model Web_Application.Models.Books
+
+@{
+    ViewData["Title"] = "Delete Book";
+}
+
+<h1>Delete Book</h1>
+
+<h3>Are you sure you want to delete this book?</h3>
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">ID</dt>
+        <dd class="col-sm-10">@Model.BookId</dd>
+
+        <dt class="col-sm-2">ISBN</dt>
+        <dd class="col-sm-10">@Model.ISBN</dd>
+
+        <dt class="col-sm-2">Title</dt>
+        <dd class="col-sm-10">@Model.Title</dd>
+
+        <!-- Add other columns here -->
+        <dt class="col-sm-2">Author</dt>
+        <dd class="col-sm-10">@Model.Author</dd>
+
+        <dt class="col-sm-2">Genre</dt>
+        <dd class="col-sm-10">@Model.Genre</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.Price</dd>
+
+        <dt class="col-sm-2">Date of Publishing</dt>
+        <dd class="col-sm-10">@Model.DateOfPublishing.ToShortDateString()</dd>
+    </dl>
+    <form asp-action="Delete" asp-route-id="@Model.BookId" method="post">
+        <button type="submit" class="btn btn-danger">Delete</button> |
+        <a asp-action="Details" asp-route-id="@Model.BookId">Back to Details</a>
+    </form>
+</div>

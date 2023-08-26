@@ -1,0 +1,61 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.pagination {
+    float: right;
+    margin: 0 0 5px;
+}
+
+    .pagination li a {
+        border: none;
+        font-size: 13px;
+        min-width: 30px;
+        min-height: 30px;
+        color: #999;
+        margin: 0 2px;
+        line-height: 30px;
+        border-radius: 2px !important;
+        text-align: center;
+        padding: 0 6px;
+    }
+
+        .pagination li a:hover {
+            color: #666;
+        }
+
+    .pagination li.active a, .pagination li.active a.page-link {
+        background: rgb(2, 80, 196);
+        
+    }
+
+        .pagination li.active a:hover {
+            background: #0397d6;
+        }
+
+    .pagination li.disabled i {
+        color: #ccc;
+    }
+
+    .pagination li i {
+        font-size: 16px;
+        padding-top: 6px
+    }

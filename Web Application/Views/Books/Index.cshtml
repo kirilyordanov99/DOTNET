@@ -1,0 +1,71 @@
+﻿@model Web_Application.Models.BooksIndexViewModel
+
+@{
+    ViewData["Title"] = "Books Index";
+}
+
+<h1>Books</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <div class="form-group">
+        <input type="text" class="form-control" name="searchQuery" placeholder="Search">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Price</th>
+            <th>Publishing Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td>@book.BookId</td>
+                <td>@book.ISBN</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Genre</td>
+                <td>@book.Price</td>
+                <td>@book.DateOfPublishing.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@book.BookId">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@book.BookId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@book.BookId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@($"{Context.Request.Path}{Context.Request.QueryString}&pageNumber={Model.PageNumber - 1}&pageSize={Model.PageSize}")">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@($"{Context.Request.Path}{Context.Request.QueryString}&pageNumber={i}&pageSize={Model.PageSize}")">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@($"{Context.Request.Path}{Context.Request.QueryString}&pageNumber={Model.PageNumber + 1}&pageSize={Model.PageSize}")">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
