@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
@@ -49,57 +50,57 @@ namespace Web_Application.Controllers
         }
 
 
-        public IActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
         [HttpGet]
-        public IActionResult ResetPassword(string code = null, string email = null)
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (code == null || email == null)
+            if (userId == null || code == null)
             {
-                return RedirectToAction("Index", "Home"); // Or handle this case as needed
+                return RedirectToAction("Index", "Home");
             }
 
-            var model = new ResetPasswordModel
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                Input = new ResetPasswordModel.InputModel
-                {
-                    Code = code,
-                    Email = email
-                }
-            };
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
 
-            return View(model);
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                return View("ConfirmEmail");
+            }
+
+            return View("Error");
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        [AllowAnonymous]
+        public async Task<IActionResult> ResendConfirmationEmail(string email)
         {
-            if (ModelState.IsValid)
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
             {
-                var user = await _userManager.FindByEmailAsync(model.Input.Email);
-                if (user == null)
-                {
-                    return RedirectToAction("ResetPasswordConfirmation");
-                }
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action(
+                    "ConfirmEmail",
+                    "User",
+                    new { userId = user.Id, code = token },
+                    protocol: Request.Scheme);
 
-                var result = await _userManager.ResetPasswordAsync(user, model.Input.Code, model.Input.Password);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("ResetPasswordConfirmation");
-                }
+                var emailConfirmationLink = $"<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>link</a>";
+                var emailConfirmationMessage = $"Please confirm your email by clicking this {emailConfirmationLink}.";
 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                // Send the email
+                await _emailSender.SendEmailAsync(user.Email, "Confirm Your Email", emailConfirmationMessage);
+
+                return RedirectToAction("ConfirmationEmailSent");
             }
-            return View(model);
+
+            return View("Error");
         }
 
-        public IActionResult ResetPasswordConfirmation()
+        public IActionResult ConfirmationEmailSent()
         {
             return View();
         }
