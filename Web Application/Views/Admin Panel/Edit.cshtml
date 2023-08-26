@@ -1,5 +1,26 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+@model Web_Application.Models.UsersViewModel
+
+<h2>Edit User</h2>
+
+<form asp-controller="UserManagement" asp-action="Edit" method="post">
+    <div class="form-group">
+        <label for="Username">Username</label>
+        <input type="text" class="form-control" id="Username" name="Username" value="@Model.Username" required>
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required>
+    </div>
+    <div class="form-group">
+        <label for="Role">Role</label>
+        <select class="form-control" id="Role" name="Role" required>
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+    </div>
+
+
+    <input type="hidden" name="UserId" value="@Model.Id">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-controller="UserManagement" asp-action="Index" class="btn btn-secondary">Back to List</a>
+</form>
