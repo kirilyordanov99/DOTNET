@@ -62,3 +62,6 @@ body {
 .hidden-id {
     display: none;
 }
+#searchQuery{
+    width: 25%;
+}
