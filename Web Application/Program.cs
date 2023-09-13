@@ -8,7 +8,7 @@ using Web_Application.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Web_Application.Models;
-using Web_Application.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,14 +25,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-// Add email sender configuration
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.Configure<EmailSenderOptions>(options =>
-{
-    options.FromEmail = "wbppcrdspprt@gmail.com";
-    options.FromName = "test";
-    options.SendGridApiKey = "W0U13EW5SwaBteZyWxHvyQ";
-});
+
 
 var app = builder.Build();
 
