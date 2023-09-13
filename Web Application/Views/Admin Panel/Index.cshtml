@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿@model SearchUsersViewModel
+@model SearchUsersViewModel
 
 <h1>User Management</h1>
 
@@ -41,52 +40,3 @@
         </div>
     }
 }
-=======
-@model Web_Application.Models.SearchUsersViewModel
-
-<h2>User Management</h2>
-
-<form asp-controller="UserManagement" asp-action="Index" method="get">
-    <div class="form-group">
-        <input type="text" class="form-control" name="searchQuery" placeholder="Search by username">
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-        {
-            <tr>
-                <td>@user.Username</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td>
-                    <a asp-controller="UserManagement" asp-action="Details" asp-route-id="@user.Id" class="btn btn-info btn-sm">Details</a>
-                    <a asp-controller="UserManagement" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-controller="UserManagement" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" asp-controller="UserManagement" asp-action="Index" asp-route-page="@i">@i</a>
-            </li>
-        }
-    </ul>
-</nav> 
->>>>>>> b94ec96b818d7bcee72efdda4c48f7a2af55750e

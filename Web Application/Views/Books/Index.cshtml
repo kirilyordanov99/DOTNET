@@ -1,24 +1,24 @@
-﻿@model Web_Application.Models.BooksIndexViewModel
+@model Web_Application.Models.BooksIndexViewModel
 
 @{
-    ViewData["Title"] = "Books Index";
+    ViewData["Title"] = "Library";
 }
 
-<h1>Books</h1>
+<h1>Library</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
 <form asp-action="Index" method="get" class="form-inline mb-3">
     <div class="form-group">
-        <input type="text" class="form-control" name="searchQuery" placeholder="Search">
+        <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search">
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
@@ -32,7 +32,6 @@
         @foreach (var book in Model.Books)
         {
             <tr>
-                <td>@book.BookId</td>
                 <td>@book.ISBN</td>
                 <td>@book.Title</td>
                 <td>@book.Author</td>
