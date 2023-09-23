@@ -1,46 +1,40 @@
 @model Web_Application.Models.UsersViewModel
 
-<h2>Create New User</h2>
-
-<form asp-controller="UserManagement" asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="Username">Username</label>
-        <input type="text" class="form-control" id="Username" name="Username" value="@Model.Username" required>
-    </div>
-    <div class="form-group">
-        <label for="Email">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required>
-    </div>
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="Password" name="Password" required>
-            <div class="input-group-append">
-                <span class="input-group-text">
-                    <i class="far fa-eye" id="togglePassword"></i>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="Role">Role</label>
-        <select class="form-control" id="Role" name="SelectedRole" required>
-            <option value="User">User</option>
-            <option value="Admin">Admin</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Create User</button>
-</form>
-
-@section Scripts {
-    <script>
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            var passwordField = document.getElementById("Password");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
-            }
-        });
-    </script>
+@{
+    ViewData["Title"] = "Create User";
 }
+
+<h2>Create User</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedRole"></label>
+                <select asp-for="SelectedRole" asp-items="Model.AvailableRoles" class="form-control">
+                    <option value="">-- Select Role --</option>
+                </select>
+                <span asp-validation-for="SelectedRole" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

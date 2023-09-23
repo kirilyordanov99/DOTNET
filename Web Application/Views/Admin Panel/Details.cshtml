@@ -1,11 +1,24 @@
 @model Web_Application.Models.UsersViewModel
 
+@{
+    ViewData["Title"] = "User Details";
+}
+
 <h2>User Details</h2>
 
-<div>
-    <h4>Username: @Model.Username</h4>
-    <p>Email: @Model.Email</p>
-    <p>Role: @Model.Role</p>
+<div class="row">
+    <div class="col-md-4">
+        <dl class="dl-horizontal">
+            <dt>Username:</dt>
+            <dd>@Model.UserName</dd>
+            <dt>Email:</dt>
+            <dd>@Model.Email</dd>
+            <dt>Role:</dt>
+            <dd>@Model.Role</dd>
+        </dl>
+    </div>
 </div>
 
-<a asp-controller="UserManagement" asp-action="Index" class="btn btn-secondary">Back to List</a>
+<div class="form-group">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

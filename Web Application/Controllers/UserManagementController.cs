@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +9,7 @@ using Web_Application.Models;
 
 namespace Web_Application.Controllers
 {//admin panel page
+    [Authorize(Roles = "Admin")]
     public class UserManagementController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -21,35 +23,60 @@ namespace Web_Application.Controllers
 
         public IActionResult Index(int page = 1, string searchTerm = "")
         {
-            int pageSize = 10; // Set your desired page size
-            var allUsers = _userManager.Users;
+            int pageSize = 10;
+            var usersQuery = _userManager.Users.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                allUsers = allUsers.Where(u => u.UserName.Contains(searchTerm) || u.Email.Contains(searchTerm));
+                usersQuery = usersQuery.Where(u => u.UserName.Contains(searchTerm) || u.Email.Contains(searchTerm));
             }
 
-            int totalUsers = allUsers.Count();
-            int totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+            var users = usersQuery.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-            var users = allUsers.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var userViewModels = users.Select(u => new UsersViewModel
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                userRole = _userManager.GetRolesAsync(u).Result.ToList() // Store roles in a List<string>
+            }).ToList();
+            ;
 
             var viewModel = new SearchUsersViewModel
             {
+                Users = userViewModels,
                 SearchTerm = searchTerm,
-                Users = users.Select(u => new UsersViewModel
-                {
-                    Id = u.Id,
-                    Username = u.UserName,
-                    Email = u.Email,
-                    Role = _userManager.GetRolesAsync(u).Result.FirstOrDefault()
-                }).ToList(),
                 CurrentPage = page,
-                TotalPages = totalPages
+                TotalPages = (int)Math.Ceiling((double)usersQuery.Count() / pageSize)
             };
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> CreateRoles()
+        {
+            var roles = new List<string> { "Admin", "User" };
+
+            foreach (var role in roles)
+            {
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    var newRole = new IdentityRole { Name = role };
+                    await _roleManager.CreateAsync(newRole);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // Add the ListRoles action to display a list of roles
+        public IActionResult ListRoles()
+        {
+            var roles = _roleManager.Roles.ToList();
+            return View(roles);
+        }
+
+        // Continue with the rest of your actions...
 
         public IActionResult Create()
         {
@@ -67,7 +94,7 @@ namespace Web_Application.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+                var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -86,8 +113,10 @@ namespace Web_Application.Controllers
                 }
             }
 
+            // Load available roles for the dropdown
             var roles = _roleManager.Roles.Select(r => r.Name).ToList();
             model.AvailableRoles = new SelectList(roles);
+
             return View(model);
         }
 
@@ -105,7 +134,7 @@ namespace Web_Application.Controllers
             var viewModel = new UsersViewModel
             {
                 Id = user.Id,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
                 SelectedRole = userRoles.FirstOrDefault(),
                 AvailableRoles = new SelectList(roles)
@@ -119,13 +148,13 @@ namespace Web_Application.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _userManager.FindByIdAsync(model.Id).Result;
+                var user = await _userManager.FindByIdAsync(model.Id);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
-                user.UserName = model.Username;
+                user.UserName = model.UserName;
                 user.Email = model.Email;
 
                 await _userManager.UpdateAsync(user);
@@ -134,6 +163,7 @@ namespace Web_Application.Controllers
                 var userRoles = await _userManager.GetRolesAsync(user);
                 if (!string.IsNullOrEmpty(model.SelectedRole))
                 {
+                    // Remove current roles and assign the new one
                     await _userManager.RemoveFromRolesAsync(user, userRoles);
                     await _userManager.AddToRoleAsync(user, model.SelectedRole);
                 }
@@ -141,11 +171,12 @@ namespace Web_Application.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Load available roles for the dropdown
             var roles = _roleManager.Roles.Select(r => r.Name).ToList();
             model.AvailableRoles = new SelectList(roles);
+
             return View(model);
         }
-
         public IActionResult Details(string id)
         {
             var user = _userManager.FindByIdAsync(id).Result;
@@ -158,7 +189,7 @@ namespace Web_Application.Controllers
             var viewModel = new UsersViewModel
             {
                 Id = user.Id,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
                 Role = userRole
             };
@@ -178,7 +209,7 @@ namespace Web_Application.Controllers
             var viewModel = new UsersViewModel
             {
                 Id = user.Id,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
                 Role = userRole
             };

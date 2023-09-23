@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AkKE2orUh5KxSGfZwndNjjnIO4IUJXp8+00AOBQ1BJAGACkHpBKyqHMAQcWiKbrMsm2IT1TKh1EywdjPEeDecw==",
+  "dgSpecHash": "fY2qDACiWKw1y83nHPOERpY+6oI5uzvsm8NFk8FL1mHsCMsaujZmOaZ/xlopgHVhrp5eNwefab3EmMMPA1BaHA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\kiryl\\Downloads\\DOTNET-main\\Web Application\\Web Application.csproj",
+  "projectFilePath": "C:\\Users\\kiryl\\OneDrive\\Desktop\\DOTNET\\Web Application\\Web Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kiryl\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\kiryl\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
