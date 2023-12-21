@@ -1,4 +1,5 @@
 # DOTNET
+some link with photos: https://drive.google.com/drive/u/1/folders/1h4rL6EtETv_tzhTWk_2T9juaZRSYVtNT
 basic web app with crud operations and admin panel, search, pagination and roles 
 I use default login/register
 I made custom recovery password template and email confimration
